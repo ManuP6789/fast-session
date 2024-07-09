@@ -8,19 +8,19 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    message: {
-      type: String,
-      required: true
-    },
-    messageType: {
-      type: String,
-      required: true // 'user' or 'bot'
-    }
+<script setup lang="ts">
+import { defineProps } from 'vue'
+
+const props = defineProps({
+  message: {
+    type: String,
+    required: true
+  },
+  messageType: {
+    type: String as () => 'user' | 'bot', // Ensure messageType is strictly 'user' or 'bot'
+    required: true
   }
-}
+})
 </script>
 
 <style scoped>

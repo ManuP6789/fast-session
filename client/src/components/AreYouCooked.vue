@@ -1,9 +1,5 @@
 <template>
   <div class="container mt-5">
-    <div class="page-header text-center">
-      <h1>AWS Bedrock</h1>
-      <hr />
-    </div>
     <div class="chat-container card">
       <div ref="chatMessages" class="chat-messages card-body">
         <ChatMessage
@@ -32,7 +28,7 @@ import ChatMessage from './ChatMessage.vue'
 import axios from 'axios'
 
 export default {
-  name: 'Cooked',
+  name: 'AreYouCooked',
   components: {
     ChatMessage
   },

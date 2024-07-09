@@ -1,12 +1,28 @@
 <template>
-  <Header />
-  <RouterView />
+  <HeaderSection :title="appTitle" :logoSrc="appLogo" />
+  <router-view />
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { RouterView } from 'vue-router'
 </script>
-import Header from './components/Header.vue' export default { name: 'App', components: { Header } }
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+import HeaderSection from './components/Header.vue' // Import your Header component here
+
+// Define props for Header component
+const appTitle = 'Bedrock Sample'
+const appLogo = './src/assets/596a68bc6e28303e5a2badb2516d56eb.png'
+
+export default defineComponent({
+  name: 'App',
+  components: {
+    RouterView,
+    HeaderSection
+  }
+})
+</script>
 
 <style>
 #app {

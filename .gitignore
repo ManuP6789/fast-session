@@ -19,5 +19,3 @@ node_modules/
 .vscode/
 
 amazon-elasticache-samples/
-
-requirements.txt

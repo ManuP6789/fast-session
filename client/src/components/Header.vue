@@ -1,41 +1,33 @@
 <template>
-  <header>
-    <nav>
-      <ul>
-        <li><router-link to="/">Home</router-link></li>
-        <li><router-link to="/books">Books</router-link></li>
-        <li><router-link to="/ping">Ping</router-link></li>
-      </ul>
-    </nav>
+  <header class="bg-light p-3">
+    <div class="container d-flex flex-row justify-content-between align-items-center">
+      <div class="d-flex align-items-center flex-row">
+        <img :src="logoSrc" alt="Logo" class="mr-3" style="height: 40px" />
+        <h1 class="h4 mb-0">{{ title }}</h1>
+      </div>
+      <nav class="mt-3">
+        <ul class="list-inline">
+          <li class="list-inline-item">
+            <router-link to="/" class="text-decoration-none">Home</router-link>
+          </li>
+        </ul>
+      </nav>
+    </div>
   </header>
 </template>
 
-<script>
-export default {
-  name: 'Header'
-}
-</script>
+<script setup lang="ts"></script>
 
-<style scoped>
-header {
-  background-color: #333;
-  padding: 10px 0;
-}
-nav ul {
-  display: flex;
-  justify-content: center;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-nav ul li {
-  margin: 0 15px;
-}
-nav ul li a {
-  color: #fff;
-  text-decoration: none;
-}
-nav ul li a.router-link-exact-active {
-  font-weight: bold;
-}
-</style>
+<style scoped></style>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  name: 'HeaderSection',
+  props: {
+    logoSrc: String,
+    title: String
+  }
+})
+</script>
