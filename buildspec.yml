@@ -1,0 +1,32 @@
+version: 0.0
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 21.7.1
+      python: 3.11.5
+    commands:
+      - echo Installing frontend dependencies...
+      - cd client
+      - npm install
+      - cd ..
+      - echo Installing backend dependencies...
+      - cd server
+      - pip install -r requirements.txt
+      - cd ..
+
+  build:
+    commands:
+      - echo Building frontend...
+      - cd client
+      - npm run build
+      - cd ..
+      - echo Build complete
+
+artifacts:
+  files:
+    - client/dist/**/*
+    - server/**/*
+
+  discard-paths: no
+  base-directory: ./
