@@ -25,7 +25,7 @@ def invoke_model(bedrock_client, model_id, input_text, max_token_count, temperat
 
 
     text_gen_config = {
-        "maxTokenCount": 512,
+        "maxTokenCount": 150,
         "stopSequences": [], 
         "temperature": 0,
         "topP": 0.9

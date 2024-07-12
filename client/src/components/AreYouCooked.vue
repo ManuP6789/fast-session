@@ -1,5 +1,58 @@
 <template>
   <div class="container mt-5">
+    <!-- Modal -->
+    <div v-if="modalShown" class="modal-backdrop"></div>
+    <div v-if="modalShown" class="modal" tabindex="-1" ref="userModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Activity Information</h5>
+          </div>
+          <div class="modal-body">
+            <div><h6>Networking: The basics</h6></div>
+            <form @submit.prevent="saveUserInfo">
+              <div class="mb-3">
+                <label for="goal" class="form-label"
+                  >What are you hoping to gain from this activity?</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="goal"
+                  v-model="userInfo.goal"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="field" class="form-label"
+                  >What area of study or field are you interested in?</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="field"
+                  v-model="userInfo.field"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="stage" class="form-label"
+                  >Are you a high school or college student?</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="stage"
+                  v-model="userInfo.stage"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="chat-container card">
       <div ref="chatMessages" class="chat-messages card-body">
         <ChatMessage
@@ -34,19 +87,34 @@ export default {
   },
   data() {
     return {
-      messages: [],
-      newMessage: ''
+      messages: [
+        {
+          text: "Welcome to our Networking Skills activity! Let's unlock the potential of your connections and advance your career. Ready to start?",
+          type: 'bot'
+        }
+      ],
+      newMessage: '',
+      userInfo: {
+        goal: '',
+        email: '',
+        stage: ''
+      },
+      modalShown: true
     }
   },
   methods: {
     async sendMessage() {
       if (this.newMessage.trim() !== '') {
         this.messages.push({ text: this.newMessage, type: 'user' })
-        const userMessage = this.newMessage
+        let userMessage = this.newMessage
         this.newMessage = ''
         this.scrollToBottom()
 
         try {
+          // if (this.messages.length === 2) {
+          //   userMessage += `, I want to learn more about networking, I am a computer science major in college.`
+          // }
+          // console.log('this is userMessage:' + userMessage) 
           const response = await this.generateBotResponse(userMessage)
           this.messages.push({ text: response.generated_text, type: 'bot' })
         } catch (error) {
@@ -86,9 +154,14 @@ export default {
 
         window.requestAnimationFrame(step)
       })
+    },
+    saveUserInfo() {
+      this.modalShown = false
+      this.$refs.userModal.style.display = 'none'
     }
   },
   mounted() {
+    this.$refs.userModal.style.display = 'block'
     this.scrollToBottom() // Initial scroll to bottom
   }
 }
@@ -110,5 +183,31 @@ export default {
   padding: 10px;
   overflow-y: scroll;
   background-color: #f9f9f9;
+}
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1050;
+}
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1040;
+}
+.modal-dialog {
+  position: relative;
+}
+.modal-content {
+  padding: 20px;
 }
 </style>

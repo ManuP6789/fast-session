@@ -19,7 +19,7 @@ def generate_text():
     
     # Bedrock model configuration
     model_id = "amazon.titan-text-lite-v1"
-    max_token_count = 512
+    max_token_count = 150
     temperature = 0.5
     top_p = 0.9
 
