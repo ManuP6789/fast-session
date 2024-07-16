@@ -5,7 +5,10 @@
     <div class="d-flex flex-column w-100">
       <div class="d-flex p-3 justify-content-between w-100">
         <div class="pr-3"><h5>Networking: The basics</h5></div>
-        <div><p>Start New Chat</p></div>
+        <div class="d-flex flex-row">
+          <img :src="refresh" class="icon" />
+          <p>Start New Chat</p>
+        </div>
       </div>
       <div class="chat-container d-flex flex-column justify-content-between h-100">
         <div ref="chatMessages" class="chat-messages card-body">
@@ -14,6 +17,7 @@
             :key="index"
             :message="message.text"
             :messageType="message.type"
+            :sender="message.sender"
           />
         </div>
         <div class="chat-input card-footer d-flex m-4">
@@ -38,6 +42,7 @@ import ChatMessage from './ChatMessage.vue'
 import UserModal from './UserModal.vue'
 import axios from 'axios'
 import logoImg from '../assets/Coach_fulllockup_mini.png'
+import refresh from '../assets/icons/restart_alt_24dp_434343_FILL0_wght400_GRAD0_opsz24.png'
 
 export default defineComponent({
   name: 'AreYouCooked',
@@ -48,13 +53,15 @@ export default defineComponent({
   },
   data() {
     return {
+      refresh,
       appLogo: logoImg,
       messages: [
         {
           text: "Welcome to our Networking Skills activity! Let's unlock the potential of your connections and advance your career. Ready to start?",
-          type: 'bot'
+          type: 'bot',
+          sender: 'Coach'
         }
-      ] as Array<{ text: string; type: string }>,
+      ] as Array<{ text: string; type: string; sender: string }>,
       newMessage: '' as string,
       userInfo: {
         goal: '' as string,
@@ -68,14 +75,14 @@ export default defineComponent({
   methods: {
     async sendMessage() {
       if (this.newMessage.trim() !== '') {
-        this.messages.push({ text: this.newMessage, type: 'user' })
+        this.messages.push({ text: this.newMessage, type: 'user', sender: this.userInfo.name })
         let userMessage = this.newMessage
         this.newMessage = ''
         this.scrollToBottom()
 
         try {
           const response = await this.generateBotResponse(userMessage)
-          this.messages.push({ text: response.generated_text, type: 'bot' })
+          this.messages.push({ text: response.generated_text, type: 'bot', sender: 'Coach' })
         } catch (error) {
           console.error('Error generating bot response:', error)
         }
@@ -114,7 +121,7 @@ export default defineComponent({
         window.requestAnimationFrame(step)
       })
     },
-    saveUserInfo(userInfo: { goal: string; field: string; stage: string }) {
+    saveUserInfo(userInfo: { goal: string; field: string; stage: string; name: string }) {
       this.userInfo = userInfo
       this.modalShown = false
     }
@@ -139,7 +146,22 @@ export default defineComponent({
 .chat-input {
   background-color: white;
 }
+
+.chat-input ::placeholder {
+  color: #9f9c9cb8; /* Light gray color */
+}
 #p {
   font-size: 10px;
+}
+.icon {
+  height: 24px;
+  width: 24px;
+  margin-right: 8px;
+}
+.btn {
+  background-color: rgb(6, 131, 118);
+}
+.btn-primary:hover {
+  background-color: rgb(126, 8, 139);
 }
 </style>

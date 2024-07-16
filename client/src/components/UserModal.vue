@@ -122,4 +122,10 @@ export default defineComponent({
 .modal-content {
   padding: 20px;
 }
+.btn {
+  background-color: rgb(6, 131, 118);
+}
+.btn-primary:hover {
+  background-color: rgb(126, 8, 139);
+}
 </style>
