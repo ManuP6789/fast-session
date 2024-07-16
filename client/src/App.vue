@@ -1,5 +1,4 @@
 <template>
-  <HeaderSection :title="appTitle" :logoSrc="appLogo" />
   <router-view />
 </template>
 
@@ -9,23 +8,23 @@ import { RouterView } from 'vue-router'
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import HeaderSection from './components/Header.vue' // Import your Header component here
-
-// Define props for Header component
-const appTitle = 'Coach'
-const appLogo = './src/assets/596a68bc6e28303e5a2badb2516d56eb.png'
 
 export default defineComponent({
   name: 'App',
   components: {
-    RouterView,
-    HeaderSection
+    RouterView
   }
 })
 </script>
 
 <style>
+html,
+body,
 #app {
-  margin-top: 10px;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  color: rgb(65, 59, 81);
+  font-family: Arial, Helvetica, sans-serif;
 }
 </style>

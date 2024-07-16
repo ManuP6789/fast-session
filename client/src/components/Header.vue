@@ -1,6 +1,6 @@
 <template>
-  <header class="bg-light p-3">
-    <div class="container d-flex flex-row justify-content-between align-items-center">
+  <div class="header d-flex flex-column justify-content-between">
+    <div class="p-4">
       <div class="d-flex align-items-center flex-row">
         <img :src="logoSrc" alt="Logo" class="mr-3" style="height: 40px" />
         <h1 class="h4 mb-0">{{ title }}</h1>
@@ -13,21 +13,41 @@
         </ul>
       </nav>
     </div>
-  </header>
+    <div class="name">
+      <h8 class="p-2">Manuel</h8>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts"></script>
 
-<style scoped></style>
+<style scoped>
+.header {
+  background-color: rgb(244, 244, 249);
+  width: 20%;
+}
+.name {
+  margin: 1px solid #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, PropType } from 'vue'
 
 export default defineComponent({
   name: 'HeaderSection',
   props: {
-    logoSrc: String,
-    title: String
+    title: {
+      type: String as PropType<string>,
+      required: true
+    },
+    logoSrc: {
+      type: String as PropType<string>,
+      required: true
+    }
   }
 })
 </script>

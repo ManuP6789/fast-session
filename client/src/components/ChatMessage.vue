@@ -8,17 +8,20 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { defineProps } from 'vue'
+<script lang="ts">
+import { defineComponent, PropType } from 'vue'
 
-const props = defineProps({
-  message: {
-    type: String,
-    required: true
-  },
-  messageType: {
-    type: String as () => 'user' | 'bot', // Ensure messageType is strictly 'user' or 'bot'
-    required: true
+export default defineComponent({
+  name: 'ChatMessage',
+  props: {
+    message: {
+      type: String as PropType<string>,
+      required: true
+    },
+    messageType: {
+      type: String as PropType<string>,
+      required: true
+    }
   }
 })
 </script>
@@ -36,7 +39,7 @@ const props = defineProps({
 }
 
 .bot-message {
-  background-color: #e0e0e0;
+  background-color: rgb(244, 244, 249);
   color: black;
 }
 </style>
