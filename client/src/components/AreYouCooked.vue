@@ -1,30 +1,31 @@
 <template>
-  <div class="d-flex h-100">
-    <HeaderSection :title="appTitle" :logoSrc="appLogo" />
+  <div class="activity-container d-flex h-100">
+    <HeaderSection :logoSrc="appLogo" :name="userInfo.name" />
     <UserModal v-if="modalShown" @submit="saveUserInfo" @close="modalShown = false" />
-    <div class="chat-container">
-      <div class="d-flex p-3 justify-content-between">
+    <div class="d-flex flex-column w-100">
+      <div class="d-flex p-3 justify-content-between w-100">
         <div class="pr-3"><h5>Networking: The basics</h5></div>
-
         <div><p>Start New Chat</p></div>
       </div>
-      <div ref="chatMessages" class="chat-messages card-body">
-        <ChatMessage
-          v-for="(message, index) in messages"
-          :key="index"
-          :message="message.text"
-          :messageType="message.type"
-        />
-      </div>
-      <div class="chat-input card-footer d-flex m-4">
-        <input
-          type="text"
-          v-model="newMessage"
-          @keyup.enter="sendMessage"
-          class="form-control me-2"
-          placeholder="Message Coach"
-        />
-        <button @click="sendMessage" class="btn btn-primary">Send</button>
+      <div class="chat-container d-flex flex-column justify-content-between h-100">
+        <div ref="chatMessages" class="chat-messages card-body">
+          <ChatMessage
+            v-for="(message, index) in messages"
+            :key="index"
+            :message="message.text"
+            :messageType="message.type"
+          />
+        </div>
+        <div class="chat-input card-footer d-flex m-4">
+          <input
+            type="text"
+            v-model="newMessage"
+            @keyup.enter="sendMessage"
+            class="form-control me-2"
+            placeholder="Message Coach"
+          />
+          <button @click="sendMessage" class="btn btn-primary">Send</button>
+        </div>
       </div>
     </div>
   </div>
@@ -36,7 +37,7 @@ import HeaderSection from './Header.vue'
 import ChatMessage from './ChatMessage.vue'
 import UserModal from './UserModal.vue'
 import axios from 'axios'
-import logoImg from '../assets/bedrock-img.png'
+import logoImg from '../assets/Coach_fulllockup_mini.png'
 
 export default defineComponent({
   name: 'AreYouCooked',
@@ -47,7 +48,6 @@ export default defineComponent({
   },
   data() {
     return {
-      appTitle: 'Coach by Career Village',
       appLogo: logoImg,
       messages: [
         {
@@ -127,11 +127,9 @@ export default defineComponent({
 
 <style scoped>
 .chat-container {
-  display: flex;
-  flex-direction: column;
   margin: 0 auto;
-  border: 1px solid #ccc;
   overflow: hidden;
+  width: 800px;
 }
 .chat-messages {
   flex: 1;
