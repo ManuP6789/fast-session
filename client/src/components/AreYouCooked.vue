@@ -30,6 +30,9 @@
           />
           <button @click="sendMessage" class="btn btn-primary">Send</button>
         </div>
+        <button v-if="showFinishActivityButton" @click="showSurvey" class="btn btn-secondary">
+          Finish Activity
+        </button>
       </div>
     </div>
     <div class="d-flex justifiy-content-center align-items-center">
@@ -37,6 +40,7 @@
     </div>
 
     <SuggestionsBar ref="suggestionsBarRef" :suggestions="suggestions" />
+    <SurveyModal v-if="showSurveyModal" :firstQuestion="userInfo.goal" @close="closeSurvey" />
   </div>
 </template>
 
@@ -45,6 +49,7 @@ import { defineComponent, ref, nextTick, computed } from 'vue'
 import HeaderSection from './Header.vue'
 import ChatMessage from './ChatMessage.vue'
 import UserModal from './UserModal.vue'
+import SurveyModal from './SurveyModal.vue'
 import SuggestionsBar, { SuggestionsBarInstance } from './SuggestionsBar.vue'
 import axios from 'axios'
 import logoImg from '../assets/Coach_fulllockup_mini.png'
@@ -58,7 +63,8 @@ export default defineComponent({
     ChatMessage,
     HeaderSection,
     UserModal,
-    SuggestionsBar
+    SuggestionsBar,
+    SurveyModal
   },
   data() {
     return {
@@ -81,7 +87,9 @@ export default defineComponent({
         name: '' as string
       },
       modalShown: true as boolean,
-      suggestions: [] as string[]
+      suggestions: [] as string[],
+      showSurveyModal: false,
+      showFinishActivityButton: false
     }
   },
   methods: {
@@ -129,6 +137,9 @@ export default defineComponent({
           }
         } catch (error) {
           console.error('Error generating bot response:', error)
+        }
+        if (this.messages.length > 3) {
+          this.showFinishActivityButton = true
         }
         this.scrollToBottom()
       }
@@ -220,6 +231,12 @@ export default defineComponent({
         console.error('Invalid response format from generateSuggestionResponse:', newSuggestions)
         // Handle unexpected response format gracefully
       }
+    },
+    showSurvey() {
+      this.showSurveyModal = true
+    },
+    closeSurvey() {
+      this.showSurveyModal = false
     }
   },
   mounted() {
@@ -275,6 +292,9 @@ export default defineComponent({
 }
 .btn-primary:hover {
   background-color: rgb(126, 8, 139);
+}
+.btn-primary:active {
+  background-color: rgb(126, 8, 129);
 }
 .button-bar {
   width: 20px;

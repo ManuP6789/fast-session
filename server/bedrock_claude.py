@@ -39,7 +39,8 @@ def invoke_claude_model(bedrock_client, model_id, input_text, prev_coach_respons
         - If you are unsure how to respond, say "Sorry, I didn't understand that. Could you rephrase your question?"
         - Do not return anything about assuming a role, for example: *takes on the role of Coach*
         - Do not say anything about the tone you use or use *clears throat.. *
-
+        - Respond in 4 paragraphs at most!!! 
+        
         Here is the query: {input_text}
     """
     conversation = [
@@ -108,6 +109,8 @@ def invoke_claude_model_suggestion(bedrock_client, model_id, prev_coach_response
         - This is the grade level of the user: {user_grade}
         - If you are unsure how to respond, do not say anything.
         - Do not return anything about assuming a role, for example: *takes on the role of prompt engineer*
+
+        RETURN ONE SUGGESTION ONLY
     """
     conversation = [
         {
@@ -122,7 +125,7 @@ def invoke_claude_model_suggestion(bedrock_client, model_id, prev_coach_response
         response = client.converse(
             modelId=model_id,
             messages=conversation,
-            inferenceConfig={"maxTokens":100,"temperature":1},
+            inferenceConfig={"maxTokens":50,"temperature":1},
             additionalModelRequestFields=additional
         )
 
