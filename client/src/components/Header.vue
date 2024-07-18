@@ -73,17 +73,58 @@
       <div class="logo-circle user-circle d-flex">
         <span class="user-icon">{{ firstLetter }}</span>
       </div>
-      <h8 class="p-2">{{ name }}</h8>
+      <h6 class="p-2">{{ name }}</h6>
     </div>
   </div>
 </template>
+
+<script lang="ts">
+import { defineComponent, PropType, computed } from 'vue'
+import addBox from '../assets/icons/add_box_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png'
+import history from '../assets/icons/history_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png'
+import home from '../assets/icons/home_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png'
+import feedback from '../assets/icons/add_comment_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png'
+import about from '../assets/icons/info_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png'
+import help from '../assets/icons/help_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png'
+
+export default defineComponent({
+  name: 'HeaderSection',
+  props: {
+    logoSrc: {
+      type: String as PropType<string>,
+      required: true
+    },
+    name: {
+      type: String as PropType<string>,
+      required: true
+    }
+  },
+  setup(props) {
+    const firstLetter = computed(() => props.name.charAt(0).toUpperCase())
+
+    return {
+      firstLetter
+    }
+  },
+  data() {
+    return {
+      addBox,
+      history,
+      home,
+      feedback,
+      about,
+      help
+    }
+  }
+})
+</script>
 
 <style scoped>
 .header {
   background-color: rgb(244, 244, 249);
   border-right: 1px solid #ccc;
   height: 100%;
-  width: 20%;
+  width: 25%;
 }
 .logo-circle {
   height: 28px;
@@ -143,44 +184,3 @@
   filter: grayscale(0%); /* White color */
 }
 </style>
-
-<script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
-import addBox from '../assets/icons/add_box_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png'
-import history from '../assets/icons/history_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png'
-import home from '../assets/icons/home_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png'
-import feedback from '../assets/icons/add_comment_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png'
-import about from '../assets/icons/info_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png'
-import help from '../assets/icons/help_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png'
-
-export default defineComponent({
-  name: 'HeaderSection',
-  props: {
-    logoSrc: {
-      type: String as PropType<string>,
-      required: true
-    },
-    name: {
-      type: String as PropType<string>,
-      required: true
-    }
-  },
-  setup(props) {
-    const firstLetter = computed(() => props.name.charAt(0).toUpperCase())
-
-    return {
-      firstLetter
-    }
-  },
-  data() {
-    return {
-      addBox,
-      history,
-      home,
-      feedback,
-      about,
-      help
-    }
-  }
-})
-</script>

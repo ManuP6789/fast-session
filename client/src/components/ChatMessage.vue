@@ -14,7 +14,7 @@
     </div>
     <div class="message bot-message">
       <p class="sender mb-1">{{ sender }}</p>
-      {{ message }}
+      <div v-html="parseMessage(message)"></div>
     </div>
   </div>
 </template>
@@ -27,7 +27,7 @@ export default defineComponent({
   name: 'ChatMessage',
   props: {
     message: {
-      type: String as PropType<string>,
+      type: [String, Object] as PropType<string | object>,
       required: true
     },
     messageType: {
@@ -41,8 +41,19 @@ export default defineComponent({
   },
   setup(props) {
     const firstLetter = computed(() => props.sender.charAt(0).toUpperCase())
-
+    const parseMessage = (message: string | object) => {
+      if (typeof message === 'string') {
+        return message.replace(/\n/g, '<br>')
+      } else if (typeof message === 'object' && message.hasOwnProperty('text')) {
+        // Handle case where message is an object with a 'text' property
+        return message.text.replace(/\n/g, '<br>')
+      } else {
+        console.warn(`Unexpected 'message' prop received: ${message}`)
+        return ''
+      }
+    }
     return {
+      parseMessage,
       firstLetter
     }
   },

@@ -5,7 +5,7 @@
     <div class="d-flex flex-column w-100">
       <div class="d-flex p-3 justify-content-between w-100">
         <div class="pr-3"><h5>Networking: The basics</h5></div>
-        <div class="d-flex flex-row">
+        <div @click="restartChat" class="d-flex flex-row">
           <img :src="refresh" class="icon" />
           <p>Start New Chat</p>
         </div>
@@ -32,27 +32,38 @@
         </div>
       </div>
     </div>
+    <div class="d-flex justifiy-content-center align-items-center">
+      <img class="icon expand" :src="isSidebarOpen ? close : expand" @click="closeSuggestionsBar" />
+    </div>
+
+    <SuggestionsBar ref="suggestionsBarRef" :suggestions="suggestions" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, nextTick } from 'vue'
+import { defineComponent, ref, nextTick, computed } from 'vue'
 import HeaderSection from './Header.vue'
 import ChatMessage from './ChatMessage.vue'
 import UserModal from './UserModal.vue'
+import SuggestionsBar, { SuggestionsBarInstance } from './SuggestionsBar.vue'
 import axios from 'axios'
 import logoImg from '../assets/Coach_fulllockup_mini.png'
 import refresh from '../assets/icons/restart_alt_24dp_434343_FILL0_wght400_GRAD0_opsz24.png'
+import expand from '../assets/icons/arrow_circle_left_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png'
+import close from '../assets/icons/arrow_circle_right_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png'
 
 export default defineComponent({
   name: 'AreYouCooked',
   components: {
     ChatMessage,
     HeaderSection,
-    UserModal
+    UserModal,
+    SuggestionsBar
   },
   data() {
     return {
+      close,
+      expand,
       refresh,
       appLogo: logoImg,
       messages: [
@@ -69,7 +80,8 @@ export default defineComponent({
         stage: '' as string,
         name: '' as string
       },
-      modalShown: true as boolean
+      modalShown: true as boolean,
+      suggestions: [] as string[]
     }
   },
   methods: {
@@ -83,6 +95,38 @@ export default defineComponent({
         try {
           const response = await this.generateBotResponse(userMessage)
           this.messages.push({ text: response.generated_text, type: 'bot', sender: 'Coach' })
+
+          // Assuming generateSuggestionResponse takes the generated_text as input
+          if (this.isSidebarOpen) {
+            let sugResponse
+            try {
+              sugResponse = await Promise.race([
+                this.generateSuggestionResponse(response.generated_text),
+                new Promise((resolve, reject) => {
+                  setTimeout(() => reject(new Error('Timeout')), 4000) // 2 second timeout
+                })
+              ])
+              sugResponse = sugResponse || []
+            } catch (error) {
+              console.error('Suggestion generation timed out:', error)
+              sugResponse = { suggestions: [] } // Handle timeout gracefully
+              sugResponse = []
+            }
+            if (typeof sugResponse === 'string') {
+              // Case 1: sugResponse is a string suggestion
+              this.updateSuggestions(sugResponse)
+            } else if (
+              sugResponse &&
+              sugResponse.generated_text &&
+              typeof sugResponse.generated_text.text === 'string'
+            ) {
+              // Case 2: sugResponse is an object with a generated_text.text property
+              this.updateSuggestions(sugResponse)
+            } else {
+              console.error('Invalid response format from generateSuggestionResponse:', sugResponse)
+              // Handle unexpected response format gracefully
+            }
+          }
         } catch (error) {
           console.error('Error generating bot response:', error)
         }
@@ -91,9 +135,36 @@ export default defineComponent({
     },
     async generateBotResponse(message: String) {
       const response = await axios.post('http://127.0.0.1:5000/generate', {
-        input_text: message
+        input_text: message,
+        coach_text_history: this.getLastBotMessage(),
+        user_text_history: this.getLastUserMessage(),
+        user_goals: this.userInfo.goal,
+        user_major: this.userInfo.field,
+        user_grade: this.userInfo.stage
       })
       return response.data
+    },
+    async generateSuggestionResponse(suggestion: String) {
+      const response = await axios.post('http://127.0.0.1:5000/generateSuggestion', {
+        coach_text_history: suggestion,
+        user_text_history: this.getLastUserMessage(),
+        user_goals: this.userInfo.goal,
+        user_major: this.userInfo.field,
+        user_grade: this.userInfo.stage
+      })
+      return response.data
+    },
+    getLastBotMessage() {
+      const lastBotMessage = this.messages
+        .filter((message) => message.sender === 'Coach')
+        .slice(-1)[0]
+      return lastBotMessage ? lastBotMessage.text : ''
+    },
+    getLastUserMessage() {
+      const lastUserMessage = this.messages
+        .filter((message) => message.sender === this.userInfo.name)
+        .slice(-1)[0]
+      return lastUserMessage ? lastUserMessage.text : ''
     },
     scrollToBottom() {
       nextTick(() => {
@@ -124,10 +195,51 @@ export default defineComponent({
     saveUserInfo(userInfo: { goal: string; field: string; stage: string; name: string }) {
       this.userInfo = userInfo
       this.modalShown = false
+    },
+    restartChat() {
+      this.messages = [
+        {
+          text: "Welcome to our Networking Skills activity! Let's unlock the potential of your connections and advance your career. Ready to start?",
+          type: 'bot',
+          sender: 'Coach'
+        }
+      ]
+      this.newMessage = ''
+      this.scrollToBottom()
+    },
+    updateSuggestions(newSuggestions: string | { generated_text: { text: string } }) {
+      if (typeof newSuggestions === 'string') {
+        this.suggestions.push(newSuggestions) // String case
+      } else if (
+        newSuggestions &&
+        newSuggestions.generated_text &&
+        typeof newSuggestions.generated_text.text === 'string'
+      ) {
+        this.suggestions.push(newSuggestions.generated_text.text) // Object case with generated_text.text property
+      } else {
+        console.error('Invalid response format from generateSuggestionResponse:', newSuggestions)
+        // Handle unexpected response format gracefully
+      }
     }
   },
   mounted() {
     this.scrollToBottom() // Initial scroll to bottom
+  },
+  setup() {
+    const suggestionsBarRef = ref<SuggestionsBarInstance | null>(null)
+    const isSidebarOpen = computed(() => suggestionsBarRef.value?.isSidebarOpen ?? false)
+
+    const closeSuggestionsBar = () => {
+      if (suggestionsBarRef.value) {
+        suggestionsBarRef.value.toggleSidebar()
+      }
+    }
+
+    return {
+      isSidebarOpen,
+      suggestionsBarRef,
+      closeSuggestionsBar
+    }
   }
 })
 </script>
@@ -163,5 +275,10 @@ export default defineComponent({
 }
 .btn-primary:hover {
   background-color: rgb(126, 8, 139);
+}
+.button-bar {
+  width: 20px;
+  height: 10px;
+  position: relative;
 }
 </style>
