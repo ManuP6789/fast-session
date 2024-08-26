@@ -6,12 +6,12 @@
           <h5 class="p-2">Tips</h5>
           <ul class="list">
             <li>
-              Share any details with Coach about careers you may be part of or interested in, so
-              that Coach can provide advice relevant to your interests.
+              Share any details with Teacher about careers you may be part of or interested in, so
+              that Teacher can provide advice relevant to your interests.
             </li>
             <li>
               Whenever you think the activity has reached a natural stopping point, you can tell
-              Coach and it will help you finish the activity.
+              Teacher and it will help you finish the activity.
             </li>
           </ul>
         </div>

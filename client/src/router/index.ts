@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import AreYouCooked from '../components/AreYouCooked.vue'
+import MainPage from '../components/MainPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'AreYouCooked',
-      component: AreYouCooked
+      name: 'MainPage',
+      component: MainPage
     }
   ]
 })

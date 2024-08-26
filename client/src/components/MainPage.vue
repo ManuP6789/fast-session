@@ -52,13 +52,13 @@ import UserModal from './UserModal.vue'
 import SurveyModal from './SurveyModal.vue'
 import SuggestionsBar, { SuggestionsBarInstance } from './SuggestionsBar.vue'
 import axios from 'axios'
-import logoImg from '../assets/Coach_fulllockup_mini.png'
+import logoImg from '../assets/bedrock-img.png'
 import refresh from '../assets/icons/restart_alt_24dp_434343_FILL0_wght400_GRAD0_opsz24.png'
 import expand from '../assets/icons/arrow_circle_left_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png'
 import close from '../assets/icons/arrow_circle_right_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png'
 
 export default defineComponent({
-  name: 'AreYouCooked',
+  name: 'MainPage',
   components: {
     ChatMessage,
     HeaderSection,
@@ -76,7 +76,7 @@ export default defineComponent({
         {
           text: "Welcome to our Networking Skills activity! Let's unlock the potential of your connections and advance your career. Ready to start?",
           type: 'bot',
-          sender: 'Coach'
+          sender: 'Teacher'
         }
       ] as Array<{ text: string; type: string; sender: string }>,
       newMessage: '' as string,
