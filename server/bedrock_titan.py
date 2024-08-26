@@ -4,10 +4,10 @@ import boto3
 from botocore.exceptions import ClientError
 
 # Configure logging
-logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-def invoke_model(bedrock_client, model_id, input_text, max_token_count, temperature, top_p):
+def invoke_titan_model(bedrock_client, model_id, input_text, max_token_count, temperature, top_p):
     """
     Sends input text to a model for text generation.
     Args:
@@ -25,7 +25,7 @@ def invoke_model(bedrock_client, model_id, input_text, max_token_count, temperat
 
 
     text_gen_config = {
-        "maxTokenCount": 512,
+        "maxTokenCount": 150,
         "stopSequences": [], 
         "temperature": 0,
         "topP": 0.9
